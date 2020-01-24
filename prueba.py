@@ -6,7 +6,7 @@ import matplotlib.pyplot as pltq
 import tensorflow as tf
 
 #Load the saved model
-model = tf.keras.models.load_model('model-pro-v2.2.h5')
+model = tf.keras.models.load_model('model-pro-v6DEFINITIVO.h5')
 # Show the model architecture
 model.summary()
 
@@ -18,8 +18,7 @@ while True:
         _, frame = video.read()
         #Convert the captured frame into RGB
         im = Image.fromarray(frame, 'RGB')
-
-        #Resizing into 128x128 because we trained the model with this image size.
+        
         size_image = im.resize((30, 30))
         data.append(np.array(size_image))
         X_test=np.array(data)

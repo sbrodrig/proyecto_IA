@@ -7,8 +7,8 @@ Original file is located at
     https://colab.research.google.com/drive/1gXJho3gxNnptzz6ZsYdmDdATA4J3OsvW
 """
 
-from google.colab import drive
-drive.mount('/content/drive')
+#from google.colab import drive
+#drive.mount('/content/drive')
 
 import numpy as np 
 import random as rd
@@ -18,10 +18,11 @@ import tensorflow as tf
 import cv2
 from PIL import Image
 import os
-import keras.backend as K
-K.clear_session()
+#import keras.backend as K
+#K.clear_session()
 
-ruta="/content/drive/My Drive/dataset para IA/"
+#ruta="/content/drive/My Drive/dataset para IA/"
+ruta="./"
 data=[]
 labels=[]
 
@@ -39,7 +40,6 @@ for i in range(classes) :
     for a in Class:
         try:
             image=cv2.imread(path+a)
-            #image=cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             image_from_array = Image.fromarray(image, 'RGB')
             size_image = image_from_array.resize((height, width))
             data.append(np.array(size_image))
@@ -75,11 +75,6 @@ classTotals = y_train.sum(axis = 0)
 classWeight = classTotals.max()/classTotals
 
 data_gen_args = dict(
-    #featurewise_center=True,
-    #featurewise_std_normalization=True,
-    #rotation_range=20,
-    #width_shift_range=0.15,
-    #height_shift_range=0.15,
     rotation_range = 10,
     zoom_range = 0.15,
     width_shift_range = 0.2,
@@ -90,10 +85,7 @@ data_gen_args = dict(
     fill_mode = "nearest"
     )
 datagen = tf.keras.preprocessing.image.ImageDataGenerator(**data_gen_args)
-#val_datagen = tf.keras.preprocessing.image.ImageDataGenerator()
-
 datagen.fit(X_train)
-#val_datagen.fit(X_val)
 
 #Definition of the DNN model
 from keras.models import Sequential
@@ -137,10 +129,6 @@ history=model.fit_generator(datagen.flow(X_train, y_train, batch_size=batch_size
                             validation_data=(X_val,y_val),
                             class_weight = classWeight,
                             verbose = 1)
-#history = model.fit(X_train, 
-#                    y_train, 
-#                    batch_size=32, epochs=epochs, 
-#                    validation_data=(X_val, y_val))
 
 #Display of the accuracy and the loss values
 import matplotlib.pyplot as plt
@@ -160,16 +148,6 @@ plt.title('Loss')
 plt.xlabel('epochs')
 plt.ylabel('loss')
 plt.legend()
-
-del model
-
-print(history.history.keys())
-
-#Save de Model
-model.save(ruta+'model-pro-v6DEFINITIVO.h5')
-
-# Recreate the exact same model, including its weights and the optimizer
-model = tf.keras.models.load_model(ruta+'model-pro-v5.h5')
 
 # Show the model architecture
 model.summary()
@@ -235,7 +213,6 @@ vals=[]
 for a in pathss:
   data=[]
   img=cv2.imread(ruta+a)
-  #img=cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
   try:
     image_from_array = Image.fromarray(img, 'RGB')
@@ -256,16 +233,3 @@ a=accuracy_score(classs, vals)
 c=classification_report(classs, vals)
 print(a)
 print(c)
-
-import tensorflow as tf
-ruta="/content/drive/My Drive/dataset para IA/"
-file="model-pro-v2.h5"
-
-converter = tf.lite.TFLiteConverter.from_keras_model_file(ruta+file)
-converter.optimizations = [tf.lite.Optimize.DEFAULT]
-tflite_quant_model = converter.convert()
-open(ruta+"converted_model_optv2.tflite", "wb").write(tflite_quant_model)
-
-converter = tf.lite.TFLiteConverter.from_keras_model_file(ruta+file)
-tflite_quant_model = converter.convert()
-open(ruta+"converted_modelv2.tflite", "wb").write(tflite_quant_model)
