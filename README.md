@@ -5,3 +5,5 @@
 	model-pro-v6DEFINITIVO.h5 es el save del modelo usado actualmente
 	proyectoai.py contiene el código para la creación del modelo.
 	prueba.py se usa para realizar pruebas usando la webcam
+Original file is located at
+    https://colab.research.google.com/drive/1gXJho3gxNnptzz6ZsYdmDdATA4J3OsvW
